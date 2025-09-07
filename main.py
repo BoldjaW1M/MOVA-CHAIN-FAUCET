@@ -2,7 +2,7 @@
 # Playwright >= 1.46
 # Cara pakai ringkas:
 #   pip install playwright==1.46.0 && python -m playwright install chromium
-#   isi addresses.txt & proxies.txt, lalu: python main.py
+#   isi address.txt & proxies.txt, lalu: python main.py
 
 import asyncio
 import csv
@@ -17,6 +17,27 @@ from datetime import datetime
 from typing import Optional, Tuple, List
 
 from playwright.async_api import async_playwright, BrowserContext, Page, Error as PWError
+
+# ====== Branding / Colors ======
+# Pakai colorama kalau ada (Windows friendly), fallback ke ANSI
+GREEN = "\033[92m"
+RESET = "\033[0m"
+try:
+    from colorama import init as colorama_init, Fore, Style
+    colorama_init(autoreset=True)
+    GREEN = Fore.GREEN
+    RESET = Style.RESET_ALL
+except Exception:
+    pass
+
+def pad(n: int = 1):
+    """Print n blank lines untuk jarak log."""
+    print("\n" * n, end="")
+
+def banner():
+    print("=" * 50)
+    print(f"   🚀 {GREEN}Follow https://x.com/BoldjaW1M{RESET} 🚀")
+    print("=" * 50)
 
 FAUCET_URL = "https://faucet.mars.movachain.com"
 
@@ -330,6 +351,7 @@ async def process_address(pw, address: str, proxy: ProxyConf, writer: Optional[c
     status, message, ip_info = "error", "uninitialized", ""
 
     try:
+        pad()  # jarak antar akun
         dlog(f"[{address}] ===== START (proxy {proxy.server}) =====")
         browser, context = await make_context(pw, proxy)
 
@@ -354,6 +376,7 @@ async def process_address(pw, address: str, proxy: ProxyConf, writer: Optional[c
             # retry umum
             await asyncio.sleep(2 + attempt)
 
+        pad()
         dlog(f"[{address}] RESULT: {status} — {message}")
         ts = datetime.utcnow().isoformat()
         row = [ts, address, status, message, f"{proxy.server}", ip_info]
@@ -377,22 +400,27 @@ async def process_address(pw, address: str, proxy: ProxyConf, writer: Optional[c
                 await browser.close()
             except Exception:
                 pass
+        pad()
         dlog(f"[{address}] ===== END =====")
 
 async def main():
+    banner()
+    time.sleep(0.2)  # jeda visual kecil
+    pad()
+
     ensure_outdir()
 
-    addresses = load_lines("addresses.txt")
+    address = load_lines("address.txt")
     proxies_raw = load_lines("proxies.txt")
 
-    if not addresses:
-        dlog("addresses.txt kosong / tidak ada.")
+    if not address:
+        dlog("address.txt kosong / tidak ada.")
         sys.exit(1)
     if not proxies_raw:
         dlog("proxies.txt kosong / tidak ada.")
         sys.exit(1)
 
-    bad = [a for a in addresses if not validate_address(a)]
+    bad = [a for a in address if not validate_address(a)]
     if bad:
         dlog("Address invalid:")
         for a in bad:
@@ -432,7 +460,7 @@ async def main():
                         with open(RESULT_CSV, "a", newline="", encoding="utf-8") as f:
                             csv.writer(f).writerow([ts, addr, "timeout", msg, f"{pick_proxy(i_addr).server}", ""])
 
-        tasks = [asyncio.create_task(worker(i, addr)) for i, addr in enumerate(addresses)]
+        tasks = [asyncio.create_task(worker(i, addr)) for i, addr in enumerate(address)]
         await asyncio.gather(*tasks)
 
 if __name__ == "__main__":
