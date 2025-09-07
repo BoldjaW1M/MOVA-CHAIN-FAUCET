@@ -13,6 +13,9 @@ python -m playwright install chromium
 ```sh
 pip install web3 eth-account
 ```
+```sh
+pip install colorama
+```
 # Prepare input files:
 addresses.txt → list of EVM wallet addresses
 proxies.txt → list of proxies (http://user:pass@ip:port)
@@ -24,5 +27,6 @@ pip install web3 eth-account
 ```sh
 python main.py
 ```
+
 
 
