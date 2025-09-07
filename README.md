@@ -17,7 +17,7 @@ pip install web3 eth-account
 pip install colorama
 ```
 # Prepare input files:
-addresses.txt → list of EVM wallet addresses
+address.txt → list of EVM wallet address
 proxies.txt → list of proxies (http://user:pass@ip:port)
 
 # Run the bot:
@@ -27,6 +27,7 @@ pip install web3 eth-account
 ```sh
 python main.py
 ```
+
 
 
 
