@@ -1,7 +1,7 @@
 ## Clone this repo
 ```sh
-git clone https://github.com/USERNAME/mova-faucet-bot.git
-cd mova-faucet-bot
+git clone https://github.com/BoldjaW1M/MOVA-CHAIN-FAUCET.git
+cd MOVA-CHAIN-FAUCET
 ```
 # Install dependencies
 ```sh
@@ -18,3 +18,4 @@ proxies.txt → list of proxies (http://user:pass@ip:port)
 ```sh
 python main.py
 ```
+
