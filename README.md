@@ -10,12 +10,19 @@ pip install playwright==1.46.0
 ```sh
 python -m playwright install chromium
 ```
+```sh
+pip install web3 eth-account
+```
 # Prepare input files:
 addresses.txt → list of EVM wallet addresses
 proxies.txt → list of proxies (http://user:pass@ip:port)
 
 # Run the bot:
 ```sh
+pip install web3 eth-account
+```
+```sh
 python main.py
 ```
+
 
